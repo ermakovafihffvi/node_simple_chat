@@ -1,0 +1,25 @@
+{
+    "name": "nodejs-2",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js \"hello wold\" 1 2 3",
+        "start:dev": "node index.js \"hello wold\" 1 2 3"
+    },
+    "bin": {
+        "reader": "/lesson-4/3.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "colors": "^1.4.0",
+        "fs": "^0.0.1-security",
+        "http": "^0.0.1-security",
+        "inquirer": "^8.2.4",
+        "path": "^0.12.7",
+        "readline": "^1.3.0",
+        "socket.io": "^4.5.1",
+        "yargs": "^17.5.1"
+    }
+}

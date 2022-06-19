@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket</title>
+    <script
+      src="https://cdn.socket.io/4.2.0/socket.io.min.js"
+      integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div><h1>Cейчас на сайте: </h1><p id="userNumb"></p></div>
+    <input id="input" type="text" autofocus />
+    <button id="button">Send</button>
+    <div id="messages"></div>
+    <script>
+      const socket = io("localhost:8085");
+      const messageBlock = document.querySelector("#messages");
+      const button = document.querySelector("#button");
+      const input = document.querySelector("#input");
+      const userNumb = document.querySelector("#userNumb");
+
+      button.addEventListener("click", () => {
+        const data = {
+          message: input.value,
+          author: window.author
+        };
+
+        socket.emit("newMessage", data);
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to chat!");
+
+        socket.emit("userNumb", 1);
+
+        var author = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++){
+            author += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        window.author = author;
+        const data = {
+          message: window.author+" connected to chat",
+          author: "<h3 style='color:green;'>system</h3>"
+        };
+
+        socket.emit("newMessage", data);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("disconnected");
+        const data = {
+          message: window.author+" disconnected from chat",
+          author: "<h3 style='color:red;'>system</h3>"
+        };
+
+        socket.emit("newMessage", data);
+      });
+
+      socket.on("userNumb", (data) => {
+        console.log(data);
+        userNumb.innerHTML = data;
+      });
+
+      socket.on("newMessage", (data) => {
+        input.value = "";
+        messageBlock.insertAdjacentHTML(
+          "beforeend",
+          `<div style="display: block; outline: blue 1px solid;">
+            <div><h3>сообщение: </h3>${data.message}</div>
+            <div><h4>автор(рандомно сгенерированный): </h4>${data.author}</div>
+          </div>`
+        );
+      });
+    </script>
+  </body>
+</html>
